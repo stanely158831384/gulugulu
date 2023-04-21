@@ -34,7 +34,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: ^1.15
+          go-version: 1.19
         id: go
 
       - name: Check out code into the GO module directory
@@ -42,8 +42,8 @@ jobs:
 
       - name: Install golang-migrate
         run: |
-          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.12.2/migrate.darwin-amd64.tar.gz | tar xvz
-          sudo mv migrate /usr/bin/
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.darwin-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/bin/migrate
           which migrate
 
       - name: RUn migrations
