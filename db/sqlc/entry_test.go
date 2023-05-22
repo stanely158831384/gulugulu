@@ -30,8 +30,9 @@ func createRandomEntry(t *testing.T,account Account) Entry{
 }
 
 func TestCreateEntry(t *testing.T){
+	user := createRandomUser(t)
 	arg := CreateAccountParams{
-		Owner: util.RamdomOwner(),
+		Owner: user.Username,
 		Balance: util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
@@ -41,8 +42,9 @@ func TestCreateEntry(t *testing.T){
 }
 
 func TestGetEntry(t *testing.T) {
+	user := createRandomUser(t)
 	arg := CreateAccountParams{
-		Owner: util.RamdomOwner(),
+		Owner: user.Username,
 		Balance: util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
@@ -60,8 +62,9 @@ func TestGetEntry(t *testing.T) {
 }
 
 func TestUpdateEntry(t *testing.T) {
+	user := createRandomUser(t)
 	arg1 := CreateAccountParams{
-		Owner: util.RamdomOwner(),
+		Owner: user.Username,
 		Balance: util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
@@ -86,8 +89,9 @@ func TestUpdateEntry(t *testing.T) {
 }
 
 func TestDeleteEntry(t *testing.T){
+	user := createRandomUser(t)
 	arg1 := CreateAccountParams{
-		Owner: util.RamdomOwner(),
+		Owner: user.Username,
 		Balance: util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
@@ -106,20 +110,43 @@ func TestDeleteEntry(t *testing.T){
  
 
 func TestListEntries(t *testing.T){
+	account := createRandomAccount(t);
 	for i := 0; i<10; i++{
-		createRandomAccount(t)
+		createRandomEntry(t,account)
 	}
 
-	arg := ListAccountsParams{
+	arg := ListEntriesParams{
 		Limit: 5,
 		Offset: 5, 
 	}
 
-	accounts, err := testQueries.ListAccounts(context.Background(), arg)
+	entries, err := testQueries.ListEntries(context.Background(), arg)
 	require.NoError(t,err)
-	require.Len(t,accounts,5)
+	require.Len(t,entries,5)
 
-	for _, account := range accounts {
-		require.NotEmpty(t,account)
+	for _, entry := range entries {
+		require.NotEmpty(t,entry)
 	}
 }
+
+// func TestListEntries(t *testing.T) {
+// 	account := createRandomAccount(t)
+// 	for i := 0; i < 10; i++ {
+// 		createRandomEntry(t, account)
+// 	}
+
+// 	arg := ListEntriesParams{
+// 		AccountID: account.ID,
+// 		Limit:     5,
+// 		Offset:    5,
+// 	}
+
+// 	entries, err := testQueries.ListEntries(context.Background(), arg)
+// 	require.NoError(t, err)
+// 	require.Len(t, entries, 5)
+
+// 	for _, entry := range entries {
+// 		require.NotEmpty(t, entry)
+// 		require.Equal(t, arg.AccountID, entry.AccountID)
+// 	}
+// }

@@ -10,17 +10,19 @@ import (
 	"github.com/techschool/simplebank/util"
 )
 
-func createAccountsAndTransfers(t *testing.T) []Account{
+func CreateAccountsAndTransfers(t *testing.T) []Account{
+	user := createRandomUser(t)
 	arg1 := CreateAccountParams{
-		Owner: util.RamdomOwner(),
+		Owner: user.Username,
 		Balance: util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
 	account1, err1 := testQueries.CreateAccount(context.Background(),arg1)
 	require.NoError(t, err1)
 
+	user2 := createRandomUser(t)
 	arg2 := CreateAccountParams{
-		Owner: util.RamdomOwner(),
+		Owner: user2.Username,
 		Balance: util.RandomMoney(),
 		Currency: util.RandomCurrency(),
 	}
@@ -34,9 +36,9 @@ func createAccountsAndTransfers(t *testing.T) []Account{
 	return accountS 
 }
 
-func createRandomTransfer(t *testing.T) Transfer{
+func CreateRandomTransfer(t *testing.T) Transfer{
 
-	accountArray := createAccountsAndTransfers(t)
+	accountArray :=  CreateAccountsAndTransfers(t)
 
 	arg := CreateTransferParams{
 		FromAccountID: accountArray[0].ID,
@@ -59,11 +61,11 @@ func createRandomTransfer(t *testing.T) Transfer{
 }
 
 func TestCreateTransfer(t *testing.T){
-	createRandomTransfer(t)
+	CreateRandomTransfer(t)
 }
 
 func TestGetTransfer(t *testing.T) {
-	transfer1 := createRandomTransfer(t)
+	transfer1 := CreateRandomTransfer(t)
 	transfer2, err := testQueries.GetTransfer(context.Background(),transfer1.ID)
 	require.NoError(t,err)
 	require.NotEmpty(t,transfer2)
@@ -76,7 +78,7 @@ func TestGetTransfer(t *testing.T) {
 }
 
 func TestUpdateTransfer(t *testing.T) {
-	transfer1 := createRandomTransfer(t)
+	transfer1 := CreateRandomTransfer(t)
 
 	arg := UpdateTransferParams{
 		ID: transfer1.ID,
@@ -94,7 +96,7 @@ func TestUpdateTransfer(t *testing.T) {
 
 
 func TestDeleteTransfer(t *testing.T){
-	transfer1 := createRandomTransfer(t)
+	transfer1 := CreateRandomTransfer(t)
 	err := testQueries.DeleteTransfer(context.Background(),transfer1.ID)
 	require.NoError(t,err)
 
@@ -106,7 +108,7 @@ func TestDeleteTransfer(t *testing.T){
 
 func TestListTransfers(t *testing.T){
 	for i := 0; i<10; i++{
-		createRandomTransfer(t)
+		CreateRandomTransfer(t)
 	}
 
 	arg := ListTransfersParams{
