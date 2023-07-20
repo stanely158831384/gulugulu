@@ -20,6 +20,9 @@ migratedown:
 migratedown1:
 	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 
+new_migration:
+	migrate create -ext sql -dir db/migration -seq $(name)
+
 db_docs:
 	dbdocs build doc/db.dbml
 
@@ -30,7 +33,7 @@ sqlc:
 	sqlc generate
 
 test:
-	go test -v  ./...
+	go test -v -cover -short ./...
 
 testU:
 	go test -v  ./...
@@ -52,8 +55,12 @@ evans:
 	evans --host localhost --port 9090 -r repl
 
 mock:
-	mockgen -package mockdb -destination db/mock/store.go github.com/techschool/simplebank/db/sqlc Store 
+	mockgen -package mockdb -destination db/mock/store.go github.com/techschool/simplebank/db/sqlc Store
+	mockgen -package mockwk -destination worker/mock/distributor.go github.com/techschool/simplebank/worker TaskDistributor
 
-.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc test server mock testU db_docs db_schema proto
+redis:
+	docker run --name redis -p 6379:6379 -d redis:7-alpine
+
+.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc test server mock testU db_docs db_schema proto redis new_migration
 
 
