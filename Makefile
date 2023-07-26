@@ -61,6 +61,21 @@ mock:
 redis:
 	docker run --name redis -p 6379:6379 -d redis:7-alpine
 
-.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc test server mock testU db_docs db_schema proto redis new_migration
+kup:
+	kubectl apply -f localK8sConf/deployment.yaml
+	kubectl apply -f localK8sConf/service.yaml
+	kubectl apply -f localK8sConf/ingress.yaml
+	kubectl apply -f localK8sConf/redis.yaml
+	kubectl apply -f localK8sConf/postgres.yaml
+
+
+kdown:
+	kubectl delete -f localK8sConf/deployment.yaml
+	kubectl delete -f localK8sConf/service.yaml
+	kubectl delete -f localK8sConf/ingress.yaml
+	kubectl delete -f localK8sConf/redis.yaml
+	kubectl delete -f localK8sConf/postgres.yaml
+
+.PHONY: postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 sqlc test server mock testU db_docs db_schema proto redis new_migration kup kdown
 
 

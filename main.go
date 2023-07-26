@@ -42,7 +42,10 @@ func main() {
 	}
 	if config.Environment == "development" {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
 
+	if config.MigrationURL == ""{
+		log.Fatal().Err(err).Msg("config.MigrationURL is empty")
 	}
 
 	connPool, err := pgxpool.New(context.Background(), config.DBSource)
