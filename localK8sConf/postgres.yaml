@@ -20,6 +20,9 @@ spec:
               value: secret
             - name: POSTGRES_USER
               value: root
+            - name: POSTGRES_DB
+              value: simple_bank
+
 ---
 apiVersion: v1
 kind: Service

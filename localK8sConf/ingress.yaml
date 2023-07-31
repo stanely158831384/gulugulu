@@ -14,7 +14,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: "api.gulugulublog.net"
+    - host: "api.gulugulublogtest.net"
       http:
         paths:
           - pathType: Prefix
